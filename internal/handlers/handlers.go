@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"../service/service.go"
+	"MorzeText/internal/service"
 )
 
 func ParseHTML(w http.ResponseWriter, r *http.Request) {
@@ -19,15 +19,15 @@ func ParseHTML(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// извлекаем файл из формы
-	file, _, err := r.FormFile("file")
+	myFile, _, err := r.FormFile("myFile")
 	if err != nil {
 		http.Error(w, "Form don't have a file", http.StatusInternalServerError) // mb better StatusBadRequest
 		return
 	}
-	defer file.Close()
+	defer myFile.Close()
 
 	// извлекаем данные из файла
-	data, err := io.ReadAll(file)
+	data, err := io.ReadAll(myFile)
 	if err != nil {
 		http.Error(w, "Reading error: can't get data from file", http.StatusInternalServerError)
 		return
@@ -44,20 +44,20 @@ func ParseHTML(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// создать локальный файл и записать туда результаты конвертации
-	fileName := time.Now().UTC().Format("15:04:03 02-01-2006")
+	fileName := time.Now().Format("15.04.05_02.01.2006")
 
 	err = os.WriteFile(fileName, []byte(str), 0755)
 	if err != nil {
-		http.Error(w, "Error of WriteFile", http.StatusInternalServerError)
+		http.Error(w, "Failed to save result", http.StatusInternalServerError)
 		return
 	}
 	fmt.Printf("File %s created\n", fileName)
 
-	// получаем расширение файла (пока не понял зачем)
+	// получаем расширение файла (не понял зачем)
 	// ext := filepath.Ext(fileName)
 
 	// вернуть результат конвертации строки
-	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write([]byte(str))
 	if err != nil {

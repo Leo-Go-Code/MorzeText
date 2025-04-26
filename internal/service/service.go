@@ -1,8 +1,8 @@
 package service
 
 import (
+	"MorzeText/pkg/morse"
 	"fmt"
-	"morse"
 	"strings"
 )
 

@@ -1,26 +1,27 @@
 package server
 
 import (
-	"handlers"
 	"log"
 	"net/http"
 	"time"
+
+	"MorzeText/internal/handlers"
 )
 
 // создал структуру сервера
 type Server struct {
 	logger     *log.Logger
-	httpServer *http.Server
+	HTTPServer *http.Server
 }
 
 // создаёт новый экземпляр структуры http.Server
-func New(logger *log.Logger) *Server {
+func NewServer(logger *log.Logger) *Server {
 	// Создаем роутер
 	router := http.NewServeMux()
 
 	// зарег хендлеры
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		logger.Println("Обработка запроса на /")
+		http.ServeFile(w, r, "index.html")
 		if r.URL.Path != "/" {
 			http.NotFound(w, r)
 			return
@@ -28,7 +29,7 @@ func New(logger *log.Logger) *Server {
 		w.Write([]byte("Главная страница конвертер Морзе-Текст"))
 	})
 
-	router.HandleFunc("/convert", handlers.ParseHTML)
+	router.HandleFunc("/upload", handlers.ParseHTML)
 
 	// Создаем HTTP-сервер
 	httpServer := &http.Server{
@@ -43,6 +44,6 @@ func New(logger *log.Logger) *Server {
 	// возвращаем ссылку на сервер
 	return &Server{
 		logger:     logger,
-		httpServer: httpServer,
+		HTTPServer: httpServer,
 	}
 }
