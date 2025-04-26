@@ -1,11 +1,10 @@
 package server
 
 import (
+	"handlers"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/Yandex-Practicum/go1fl-sprint6-final/internal/handlers"
 )
 
 // создал структуру сервера
