@@ -10,7 +10,21 @@ import (
 	"MorzeText/internal/service"
 )
 
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
+	http.ServeFile(w, r, "index.html") // сначала проверка, потом ServeFile
+}
+
 func ParseHTML(w http.ResponseWriter, r *http.Request) {
+	// проверка на соответствие метода
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method is not correct", http.StatusMethodNotAllowed)
+		return
+	}
+
 	// парсим форму
 	err := r.ParseMultipartForm(10 << 20) // mb ParseForm
 	if err != nil {

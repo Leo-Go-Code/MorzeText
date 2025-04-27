@@ -1,9 +1,10 @@
 package main
 
 import (
-	"MorzeText/internal/server"
 	"log"
 	"os"
+
+	"MorzeText/internal/server"
 )
 
 func main() {

@@ -1,17 +1,21 @@
 package service
 
 import (
-	"MorzeText/pkg/morse"
-	"fmt"
 	"strings"
+
+	"MorzeText/pkg/morse"
 )
 
 func Service(input string) (string, error) {
 	if input == "" {
-		return "", fmt.Errorf("Can't translate empty string")
+		return "", morse.ErrNoEncoding{Text: "Can't translate empty string"}
 	}
 
-	if strings.HasPrefix(input, ".") || strings.HasPrefix(input, "-") {
+	isMorse := strings.ContainsFunc(input, func(r rune) bool {
+		return r == '.' || r == '-'
+	})
+
+	if isMorse {
 		return morse.ToText(input), nil
 	} else {
 		return morse.ToMorse(input), nil

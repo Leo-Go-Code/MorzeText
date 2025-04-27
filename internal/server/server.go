@@ -20,16 +20,8 @@ func NewServer(logger *log.Logger) *Server {
 	router := http.NewServeMux()
 
 	// зарег хендлеры
-	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "index.html")
-		if r.URL.Path != "/" {
-			http.NotFound(w, r)
-			return
-		}
-		w.Write([]byte("Главная страница конвертер Морзе-Текст"))
-	})
-
-	router.HandleFunc("/upload", handlers.ParseHTML)
+	router.HandleFunc("/", handlers.HomeHandler)
+	router.HandleFunc("/upload", handlers.ParseHTML) // проверяю метод в хендлере
 
 	// Создаем HTTP-сервер
 	httpServer := &http.Server{
